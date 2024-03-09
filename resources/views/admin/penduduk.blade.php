@@ -29,8 +29,7 @@
             <div class="card-header">
               <h3 class="card-title">Master Data Penduduk</h3>
               <br>
-              <a href="#" class="btn btn-primary">Tambah Data</a>
-              <a href="#" class="btn btn-primary">Import Data</a>
+              <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#modal-create">Tambah Data</a>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
@@ -88,6 +87,103 @@
   <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
+
+<!-- Modal -->
+<div class="modal fade" id="modal-create" aria-modal="true" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Tambah Data Penduduk</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group row">
+          <label for="nik" class="col-sm-2 col-form-label">NIK</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="nik" name="nik" placeholder="NIK">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="nkk" class="col-sm-2 col-form-label">NO KK</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="nkk" name="nkk" placeholder="NO KK">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="nama" class="col-sm-2 col-form-label">NAMA</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="nama" name="nama" placeholder="NAMA">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="tempat_lahir" class="col-sm-2 col-form-label">TEMPAT LAHIR</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir" placeholder="TEMPAT LAHIR">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="tanggal_lahir" class="col-sm-2 col-form-label">TANGGAL LAHIR</label>
+          <div class="col-sm-10">
+            <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" placeholder="TANGGAL LAHIR">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="jenis_kelamin" class="col-sm-2 col-form-label">JENIS KELAMIN</label>
+          <div class="col-sm-10">
+            <select class="custom-select rounded-0" id="jenis_kelamin" name="jenis_kelamin">
+              <option value="L">LAKI-LAKI</option>
+              <option value="P">PEREMPUAN</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="rw" class="col-sm-2 col-form-label">RW</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="rw" name="rw" placeholder="RW">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="rt" class="col-sm-2 col-form-label">RT</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="rt" name="rt" placeholder="RT">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="alamat" class="col-sm-2 col-form-label">ALAMAT</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="alamat" name="alamat" placeholder="ALAMAT">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="agama" class="col-sm-2 col-form-label">AGAMA</label>
+          <div class="col-sm-10">
+            <select class="custom-select rounded-0" id="agama" name="agama">
+              <option value="ISLAM">ISLAM</option>
+              <option value="KRISTEN">KRISTEN</option>
+              <option value="KATOLIK">KATOLIK</option>
+              <option value="HINDU">HINDU</option>
+              <option value="BUDDHA">BUDDHA</option>
+              <option value="KHONGHUCU">KHONGHUCU</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="pekerjaan" class="col-sm-2 col-form-label">pekerjaan</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="pekerjaan" name="pekerjaan" placeholder="pekerjaan">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+  <!-- /.modal -->
 @endsection
 
 @section('js')
