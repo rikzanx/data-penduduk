@@ -30,6 +30,7 @@ class Penduduk extends Model
         'agama',
         'status_perkawinan',
         'pekerjaan',
+        'created_by'
     ];
 
     public function anggotas(){

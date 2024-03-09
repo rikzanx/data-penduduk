@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Penduduk;
+use Validator;
+use Session;
 
 class PendudukController extends Controller
 {
@@ -27,7 +30,16 @@ class PendudukController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'nik' => 'required|string|max:255',
+            'nkk' => 'required|string|max:255',
+            'nama' => 'required|string|max:255',
+            'material' => 'required|string|max:255',
+            'brand' => 'required|string|max:255',
+            'jumlah' => 'required|integer',
+            'keterangan' => 'required|string|max:255',
+        ]);
+        dd($request);
     }
 
     /**
