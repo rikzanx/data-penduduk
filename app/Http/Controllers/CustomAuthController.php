@@ -15,17 +15,18 @@ use GuzzleHttp\Exception\RequestException;
 class CustomAuthController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
         try{
             if ($this->cekKoneksiInternet()) {
+                $currentUrl = $request->url();
                 $month = date('m');
                 $year = date('Y');
                 $cek = Backup::whereYear('created_at',$year)->whereMonth('created_at',$month)->first();
-                if(!$cek){
+                if(!$cek && str_contains($currentUrl, 'localhost')){
                     $dataPenduduk = Penduduk::all();
                     $client = new Client();
-                    $response = $client->post('http://localhost/data-penduduk/api/backup', [
+                    $response = $client->post('https://desaku.shw.my.id/api/backup', [
                         'json' => $dataPenduduk
                     ]);
                     $statusCode = $response->getStatusCode();

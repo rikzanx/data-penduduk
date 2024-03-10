@@ -168,7 +168,7 @@ class PendudukController extends Controller
     public function handle_backup(Request $request){
         try{
             $jsonData = json_encode($request->all());
-            $today = date("Y-m-d");
+            $today = date("Y-m-d H:i:s");
             $file_name = 'data-backup_'.$today.'.json';
             $filePath = public_path('data/'.$file_name);
     
