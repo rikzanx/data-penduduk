@@ -279,13 +279,11 @@
           "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
           initComplete: function () {
               var api = this.api();
-
               // For each column
               api
                   .columns()
                   .eq(0)
                   .each(function (colIdx) {
-                      console.log(colIdx);
                       // Set the header cell to contain the input element
                       var cell = $('.filters th').eq(
                           $(api.column(colIdx).header()).index()
