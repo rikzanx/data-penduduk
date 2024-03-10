@@ -41,6 +41,8 @@
                   <th>KK</th>
                   <th>NAMA</th>
                   <th>JK</th>
+                  <th>TGL LAHIR</th>
+                  <th>USIA</th>
                   <th>RW</th>
                   <th>RT</th>
                   <th>AKSI</th>
@@ -54,6 +56,8 @@
                     <td>{{ $item->nkk }}</td>
                     <td>{{ $item->nama }}</td>
                     <td>{{ $item->jenis_kelamin }}</td>
+                    <td>{{ $item->tanggal_lahir }}</td>
+                    <td>{{ $item->usia }}</td>
                     <td>{{ $item->rw }}</td>
                     <td>{{ $item->rt }}</td>
                     <td>
@@ -64,18 +68,6 @@
                   </tr>
                   @endforeach
                 </tbody>
-                <tfoot>
-                  <tr>
-                    <th>No</th>
-                    <th>NIK</th>
-                    <th>KK</th>
-                    <th>NAMA</th>
-                    <th>JK</th>
-                    <th>RW</th>
-                    <th>RT</th>
-                    <th>AKSI</th>
-                  </tr>
-                </tfoot>
               </table>
             </div>
             <!-- /.card-body -->
@@ -145,21 +137,21 @@
             </div>
           </div>
           <div class="form-group row">
-            <label for="rw" class="col-sm-2 col-form-label">RW</label>
-            <div class="col-sm-10">
-              <select class="custom-select rounded-0" name="rw" id="rw">
-                @foreach($rws as $rw)
-                  <option value="{{ $rw->name }}">{{ $rw->name }}</option>
-                @endforeach
-              </select>
-            </div>
-          </div>
-          <div class="form-group row">
             <label for="rt" class="col-sm-2 col-form-label">RT</label>
             <div class="col-sm-10">
             <select class="custom-select rounded-0" name="rt" id="rt">
                 @foreach($rts as $rt)
                   <option value="{{ $rt->name }}">{{ $rt->name }}</option>
+                @endforeach
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="rw" class="col-sm-2 col-form-label">RW</label>
+            <div class="col-sm-10">
+              <select class="custom-select rounded-0" name="rw" id="rw">
+                @foreach($rws as $rw)
+                  <option value="{{ $rw->name }}">{{ $rw->name }}</option>
                 @endforeach
               </select>
             </div>
@@ -254,16 +246,6 @@
               </div>
             </div>
             <div class="form-group row">
-              <label for="rw" class="col-sm-2 col-form-label">RW</label>
-              <div class="col-sm-10">
-                <select class="custom-select rounded-0" name="rw" id="rw">
-                  @foreach($rws as $rw)
-                    <option value="{{ $rw->name }}" {{ ($rw->name == $item->rw)?'selected':'' }}>{{ $rw->name }}</option>
-                  @endforeach
-                </select>
-              </div>
-            </div>
-            <div class="form-group row">
               <label for="rt" class="col-sm-2 col-form-label">RT</label>
               <div class="col-sm-10">
               <select class="custom-select rounded-0" name="rt" id="rt">
@@ -273,6 +255,17 @@
                 </select>
               </div>
             </div>
+            <div class="form-group row">
+              <label for="rw" class="col-sm-2 col-form-label">RW</label>
+              <div class="col-sm-10">
+                <select class="custom-select rounded-0" name="rw" id="rw">
+                  @foreach($rws as $rw)
+                    <option value="{{ $rw->name }}" {{ ($rw->name == $item->rw)?'selected':'' }}>{{ $rw->name }}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+            
             <div class="form-group row">
               <label for="alamat" class="col-sm-2 col-form-label">ALAMAT</label>
               <div class="col-sm-10">
@@ -377,21 +370,17 @@
               </div>
             </div>
             <div class="form-group row">
+              <label for="tempat_lahir" class="col-sm-2 col-form-label">USIA</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir" placeholder="TEMPAT LAHIR" value="{{ $item->usia }}" readonly>
+              </div>
+            </div>
+            <div class="form-group row">
               <label for="jenis_kelamin" class="col-sm-2 col-form-label">JENIS KELAMIN</label>
               <div class="col-sm-10">
                 <select class="custom-select rounded-0" id="jenis_kelamin" name="jenis_kelamin" disabled>
                   <option value="L" {{ ($item->jenis_kelamin == 'L')? 'selected':'' }}>LAKI-LAKI</option>
                   <option value="P" {{ ($item->jenis_kelamin == 'P')? 'selected':'' }}>PEREMPUAN</option>
-                </select>
-              </div>
-            </div>
-            <div class="form-group row">
-              <label for="rw" class="col-sm-2 col-form-label">RW</label>
-              <div class="col-sm-10">
-                <select class="custom-select rounded-0" name="rw" id="rw" disabled>
-                  @foreach($rws as $rw)
-                    <option value="{{ $rw->name }}" {{ ($rw->name == $item->rw)?'selected':'' }}>{{ $rw->name }}</option>
-                  @endforeach
                 </select>
               </div>
             </div>
@@ -405,6 +394,17 @@
                 </select>
               </div>
             </div>
+            <div class="form-group row">
+              <label for="rw" class="col-sm-2 col-form-label">RW</label>
+              <div class="col-sm-10">
+                <select class="custom-select rounded-0" name="rw" id="rw" disabled>
+                  @foreach($rws as $rw)
+                    <option value="{{ $rw->name }}" {{ ($rw->name == $item->rw)?'selected':'' }}>{{ $rw->name }}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+            
             <div class="form-group row">
               <label for="alamat" class="col-sm-2 col-form-label">ALAMAT</label>
               <div class="col-sm-10">

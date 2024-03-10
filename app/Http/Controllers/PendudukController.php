@@ -10,6 +10,7 @@ use Validator;
 use Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class PendudukController extends Controller
 {
@@ -70,16 +71,15 @@ class PendudukController extends Controller
             $penduduk = new Penduduk();
             $penduduk->nik = $request->nik;
             $penduduk->nkk = $request->nkk;
-            $penduduk->nama = $request->nama;
-            $penduduk->tempat_lahir = $request->tempat_lahir;
+            $penduduk->nama = Str::upper($request->nama);
+            $penduduk->tempat_lahir = Str::upper($request->tempat_lahir);
             $penduduk->tanggal_lahir = $request->tanggal_lahir;
-            $penduduk->jenis_kelamin = $request->jenis_kelamin;
             $penduduk->jenis_kelamin = $request->jenis_kelamin;
             $penduduk->rw = $request->rw;
             $penduduk->rt = $request->rt;
-            $penduduk->alamat = $request->alamat;
+            $penduduk->alamat = Str::upper($request->alamat);
             $penduduk->agama = $request->agama;
-            $penduduk->pekerjaan = $request->pekerjaan;
+            $penduduk->pekerjaan = Str::upper($request->pekerjaan);
             $penduduk->created_by = Auth::user()->name;
             $penduduk->save();
             DB::commit();
@@ -134,16 +134,15 @@ class PendudukController extends Controller
             $penduduk = Penduduk::findOrFail($id);
             $penduduk->nik = $request->nik;
             $penduduk->nkk = $request->nkk;
-            $penduduk->nama = $request->nama;
-            $penduduk->tempat_lahir = $request->tempat_lahir;
+            $penduduk->nama = Str::upper($request->nama);
+            $penduduk->tempat_lahir = Str::upper($request->tempat_lahir);
             $penduduk->tanggal_lahir = $request->tanggal_lahir;
-            $penduduk->jenis_kelamin = $request->jenis_kelamin;
             $penduduk->jenis_kelamin = $request->jenis_kelamin;
             $penduduk->rw = $request->rw;
             $penduduk->rt = $request->rt;
-            $penduduk->alamat = $request->alamat;
+            $penduduk->alamat = Str::upper($request->alamat);
             $penduduk->agama = $request->agama;
-            $penduduk->pekerjaan = $request->pekerjaan;
+            $penduduk->pekerjaan = Str::upper($request->pekerjaan);
             $penduduk->save();
             DB::commit();
             return redirect()->route("penduduk.index")->with('status', "Sukses mengedit penduduk");
@@ -163,6 +162,25 @@ class PendudukController extends Controller
             return redirect()->route("penduduk.index")->with('status', "Sukses menghapus penduduk");
         }else {
             return redirect()->route("penduduk.index")->with('danger', "Terjadi Kesalahan");
+        }
+    }
+
+    public function handle_backup(Request $request){
+        try{
+            $jsonData = json_encode($request->all());
+            $today = date("Y-m-d");
+            $file_name = 'data-backup_'.$today.'.json';
+            $filePath = public_path('data/'.$file_name);
+    
+            file_put_contents($filePath,$jsonData);
+            if(file_exists($filePath)){
+                return 'ok';
+            }else{
+                return 'is not ok';
+            }
+            // return $request[0]['id']
+        }catch(\Exception $e){
+            return $e->getMessage();
         }
     }
 }

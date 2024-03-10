@@ -40,6 +40,57 @@
 
       <div class="container-fluid">
         <div class="row">
+          <div class="col-lg-4 col-6">
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>{{ $jumlah_penduduk }}</h3>
+                <p>Jumlah Penduduk</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-bag"></i>
+              </div>
+              <a href="{{ route('penduduk.index') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <div class="col-lg-4 col-6">
+            <div class="small-box bg-success">
+              <div class="inner">
+                <h3>{{ $jumlah_keluarga }}</h3>
+                <p>Jumlah Keluarga</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-stats-bars"></i>
+              </div>
+              <a href="{{ route('penduduk.index') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <div class="col-lg-4 col-6">
+            <div class="small-box bg-warning">
+              <div class="inner">
+                <h3>{{ $jumlah_user }}</h3>
+                <p>Jumlah User</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-person-add"></i>
+              </div>
+              <a href="{{ route('user.index') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+        <div class="col-md-12">
+            <!-- PIE CHART -->
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Sebaran Variatif Usia</h3>
+              </div>
+              <div class="card-body">
+                <canvas id="pieChart3" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
           <div class="col-md-6">
             <!-- PIE CHART -->
             <div class="card card-primary">
@@ -87,22 +138,7 @@
 
     // sebaran data rt
     var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
-    var pieData        = {
-      labels: [
-          'RT 01',
-          'RT 02',
-          'RT 03',
-          'RT 04',
-          'RT 05',
-          'Tidak Diketahui'
-      ],
-      datasets: [
-        {
-          data: [700,500,400,600,300,0],
-          backgroundColor : ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
-        }
-      ]
-    }
+    var pieData        = @json($sebaran_rt);
     var pieOptions     = {
       maintainAspectRatio : false,
       responsive : true,
@@ -117,19 +153,22 @@
 
     // sebaran data jenis kelamin
     var pieChartCanvas = $('#pieChart2').get(0).getContext('2d')
-    var pieData        = {
-      labels: [
-          'Laki-Laki',
-          'Perempuan',
-          'Tidak Diketahui'
-      ],
-      datasets: [
-        {
-          data: [700,400,0],
-          backgroundColor : ['#f56954', '#00a65a', '#d2d6de'],
-        }
-      ]
+    var pieData        = @json($sebaran_jenis_kelamin);
+    var pieOptions     = {
+      maintainAspectRatio : false,
+      responsive : true,
     }
+    //Create pie or douhnut chart
+    // You can switch between pie and douhnut using the method below.
+    new Chart(pieChartCanvas, {
+      type: 'pie',
+      data: pieData,
+      options: pieOptions
+    })
+
+    // sebaran data variasi usia
+    var pieChartCanvas = $('#pieChart3').get(0).getContext('2d')
+    var pieData        = @json($sebaran_varasi_usia);
     var pieOptions     = {
       maintainAspectRatio : false,
       responsive : true,

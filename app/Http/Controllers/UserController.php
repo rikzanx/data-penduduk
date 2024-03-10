@@ -3,6 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
+use Validator;
+use Session;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -11,7 +16,10 @@ class UserController extends Controller
      */
     public function index()
     {
-        return view('admin.user');
+        $users = User::get();
+        return view('admin.user',[
+            'users' => $users
+        ]);
     }
 
     /**
@@ -19,7 +27,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -27,7 +35,29 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'email' => 'required',
+            'password' => 'required',
+        ]);
+
+        if($validator->fails()){
+            return redirect()->route("user.index")->with('danger', $validator->errors()->first());
+        }
+        DB::beginTransaction();
+        try{
+            $user = new User();
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->password = bcrypt($request->password);
+            $user->save();
+            DB::commit();
+            return redirect()->route("user.index")->with('status', "Sukses menambahkan user");
+        }catch(\Exception $e){
+            DB::rollback();
+            $ea = "Terjadi Kesalahan saat menambahkan user: ".$e->getMessage();
+            return redirect()->route("user.index")->with('danger', $ea);
+        }
     }
 
     /**
@@ -49,9 +79,32 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',  
+            'email' => 'required',  
+        ]);
+        
+        if($validator->fails()){
+            return redirect()->route("user.index")->with('danger', $validator->errors()->first());
+        }
+        DB::beginTransaction();
+        try{
+            $user = User::findOrFail($id);
+            $user->name = $request->name;
+            $user->email = $request->email;
+            if($request->has('password') && $request->password != NULL && $request->password != ""){
+                $user->password = bcrypt($request->password);
+            }
+            $user->save();
+            DB::commit();
+            return redirect()->route("user.index")->with('status', "Sukses mengedit user");
+        }catch(\Exception $e){
+            DB::rollback();
+            $ea = "Terjadi Kesalahan saat mengedit user: ".$e->getMessage();
+            return redirect()->route("user.index")->with('danger', $ea);
+        }
     }
 
     /**
@@ -59,6 +112,14 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        if(User::count() > 1){
+            if(User::destroy($id)){
+                return redirect()->route("user.index")->with('status', "Sukses menghapus user");
+            }else {
+                return redirect()->route("user.index")->with('danger', "Terjadi Kesalahan");
+            }
+        }else{
+            return redirect()->route("user.index")->with('danger', "Terjadi Kesalahan");
+        }
     }
 }

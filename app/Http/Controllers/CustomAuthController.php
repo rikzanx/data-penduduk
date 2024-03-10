@@ -6,15 +6,55 @@ use Illuminate\Http\Request;
 use Hash;
 use Session;
 use App\Models\User;
+use App\Models\Penduduk;
+use App\Models\Backup;
 use Illuminate\Support\Facades\Auth;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 
 class CustomAuthController extends Controller
 {
 
     public function index()
     {
+        try{
+            if ($this->cekKoneksiInternet()) {
+                $month = date('m');
+                $year = date('Y');
+                $cek = Backup::whereYear('created_at',$year)->whereMonth('created_at',$month)->first();
+                if(!$cek){
+                    $dataPenduduk = Penduduk::all();
+                    $client = new Client();
+                    $response = $client->post('http://localhost/data-penduduk/api/backup', [
+                        'json' => $dataPenduduk
+                    ]);
+                    $statusCode = $response->getStatusCode();
+                    $data = $response->getBody()->getContents();
+                    if($statusCode == 200 && $data == "ok"){
+                        Backup::create();
+                    }
+                }
+            }
+        }catch(\Exception $e){
+            dd($e->getMessage());
+        }
         return view('login');
     }  
+    
+    protected function cekKoneksiInternet() {
+        // URL yang akan digunakan untuk memeriksa koneksi internet
+        $url = 'https://www.google.com';
+    
+        // Mengambil header dari URL
+        $headers = @get_headers($url);
+    
+        // Memeriksa apakah ada respons header
+        if ($headers && strpos($headers[0], '200')) {
+            return true; // Koneksi internet berhasil
+        } else {
+            return false; // Koneksi internet gagal
+        }
+    }
       
 
     public function customLogin(Request $request)
