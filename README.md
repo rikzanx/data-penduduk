@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 DataPenduduk Website
 --
 Data Penduduk adalah aplikasi manajemen data penduduk atau aplikasi pencatatan data penduduk.
