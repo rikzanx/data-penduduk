@@ -13,8 +13,14 @@
   <link rel="stylesheet" href="{{ asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
+  <link rel="shortcut icon" href="{{ asset('dist/img/logo.png') }}" type="image/x-icon">
 </head>
 <body class="hold-transition login-page">
+  <!-- Preloader -->
+  <div class="preloader flex-column justify-content-center align-items-center">
+    <img class="animation__shake" src="{{ asset('dist/img/logo.png') }}" alt="AdminLTELogo" height="60" width="60">
+  </div>
+  <!-- /.Preloader -->
 <div class="login-box">
   <!-- /.login-logo -->
   <div class="card card-outline card-primary">
@@ -22,7 +28,7 @@
       <a href="#" class="h1"><b>Data</b>Penduduk</a>
     </div>
     <div class="card-body">
-      <p class="login-box-msg">Selamat datang, Silahkan masuk untuk akses website.</p>
+      <p class="login-box-msg">Selamat datang, Silahkan masuk untuk akses sistem.</p>
 
       <form action="{{ route('login.custom') }}" method="post">
         @csrf
