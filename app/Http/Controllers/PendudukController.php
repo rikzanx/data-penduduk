@@ -31,7 +31,7 @@ class PendudukController extends Controller
                 if(!$cek && str_contains($currentUrl, 'localhost')){
                     $dataPenduduk = Penduduk::all();
                     $client = new Client();
-                    $response = $client->post('https://desaku.shw.my.id/api/backup', [
+                    $response = $client->post('http://localhost/data-penduduk/api/backup', [
                         'json' => $dataPenduduk
                     ]);
                     $statusCode = $response->getStatusCode();
@@ -42,7 +42,7 @@ class PendudukController extends Controller
                 }
             }
         }catch(\Exception $e){
-            // dd($e->getMessage());
+            dd($e->getMessage());
         }
         $rws = Rw::get();
         $rts = Rt::get();
@@ -52,6 +52,51 @@ class PendudukController extends Controller
             'rts' => $rts,
             'penduduks' => $penduduks
         ]);
+    }
+
+    public function handle_backup(Request $request){
+        try{
+            $jsonData = json_encode($request->all());
+            $today = date("Y-m-d H-i-s");
+            $file_name = 'data-backup_'.$today.'.json';
+            $filePath = public_path('data/'.$file_name);
+            file_put_contents($filePath,$jsonData);
+
+            $penduduks = $request->all();
+            try{
+                foreach($penduduks as $item){
+                    $penduduk = Penduduk::where('nik',$item['nik'])->first();
+                    if(!$penduduk){
+                        $penduduk = new Penduduk();
+                    }
+                    $penduduk->nik = $item['nik'];
+                    $penduduk->nkk = $item['nkk'];
+                    $penduduk->nama = Str::upper($item['nama']);
+                    $penduduk->tempat_lahir = Str::upper($item['tempat_lahir']);
+                    $penduduk->tanggal_lahir = $item['tanggal_lahir'];
+                    $penduduk->jenis_kelamin = $item['jenis_kelamin'];
+                    $penduduk->rw = $item['rw'];
+                    $penduduk->rt = $item['rt'];
+                    $penduduk->alamat = Str::upper($item['alamat']);
+                    $penduduk->agama = $item['agama'];
+                    $penduduk->pekerjaan = Str::upper($item['pekerjaan']);
+                    $penduduk->save();
+                }
+                DB::commit();
+            }catch(\Exception $e){
+                DB::rollback();
+                return $e->getMessage();
+            }
+
+            if(file_exists($filePath)){
+                return 'ok';
+            }else{
+                return 'is not ok';
+            }
+            // return $request[0]['id']
+        }catch(\Exception $e){
+            return $e->getMessage();
+        }
     }
 
     protected function cekKoneksiInternet() {
@@ -202,25 +247,6 @@ class PendudukController extends Controller
             return redirect()->route("penduduk.index")->with('status', "Sukses menghapus penduduk");
         }else {
             return redirect()->route("penduduk.index")->with('danger', "Terjadi Kesalahan");
-        }
-    }
-
-    public function handle_backup(Request $request){
-        try{
-            $jsonData = json_encode($request->all());
-            $today = date("Y-m-d H:i:s");
-            $file_name = 'data-backup_'.$today.'.json';
-            $filePath = public_path('data/'.$file_name);
-    
-            file_put_contents($filePath,$jsonData);
-            if(file_exists($filePath)){
-                return 'ok';
-            }else{
-                return 'is not ok';
-            }
-            // return $request[0]['id']
-        }catch(\Exception $e){
-            return $e->getMessage();
         }
     }
 }
