@@ -11,6 +11,9 @@ use Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
+use App\Models\Backup;
 
 class PendudukController extends Controller
 {
@@ -19,6 +22,28 @@ class PendudukController extends Controller
      */
     public function index()
     {
+        try{
+            if ($this->cekKoneksiInternet()) {
+                $currentUrl = $request->url();
+                $month = date('m');
+                $year = date('Y');
+                $cek = Backup::whereYear('created_at',$year)->whereMonth('created_at',$month)->first();
+                if(!$cek && str_contains($currentUrl, 'localhost')){
+                    $dataPenduduk = Penduduk::all();
+                    $client = new Client();
+                    $response = $client->post('https://desaku.shw.my.id/api/backup', [
+                        'json' => $dataPenduduk
+                    ]);
+                    $statusCode = $response->getStatusCode();
+                    $data = $response->getBody()->getContents();
+                    if($statusCode == 200 && $data == "ok"){
+                        Backup::create();
+                    }
+                }
+            }
+        }catch(\Exception $e){
+            // dd($e->getMessage());
+        }
         $rws = Rw::get();
         $rts = Rt::get();
         $penduduks = Penduduk::with('anggotas')->get();
@@ -27,6 +52,21 @@ class PendudukController extends Controller
             'rts' => $rts,
             'penduduks' => $penduduks
         ]);
+    }
+
+    protected function cekKoneksiInternet() {
+        // URL yang akan digunakan untuk memeriksa koneksi internet
+        $url = 'https://www.google.com';
+    
+        // Mengambil header dari URL
+        $headers = @get_headers($url);
+    
+        // Memeriksa apakah ada respons header
+        if ($headers && strpos($headers[0], '200')) {
+            return true; // Koneksi internet berhasil
+        } else {
+            return false; // Koneksi internet gagal
+        }
     }
 
     /**
