@@ -4,8 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Penduduk;
+use App\Models\Rw;
+use App\Models\Rt;
 use Validator;
 use Session;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class PendudukController extends Controller
 {
@@ -14,7 +18,14 @@ class PendudukController extends Controller
      */
     public function index()
     {
-        return view('admin.penduduk');
+        $rws = Rw::get();
+        $rts = Rt::get();
+        $penduduks = Penduduk::with('anggotas')->get();
+        return view('admin.penduduk',[
+            'rws' => $rws,
+            'rts' => $rts,
+            'penduduks' => $penduduks
+        ]);
     }
 
     /**
@@ -34,12 +45,50 @@ class PendudukController extends Controller
             'nik' => 'required|string|max:255',
             'nkk' => 'required|string|max:255',
             'nama' => 'required|string|max:255',
-            'material' => 'required|string|max:255',
-            'brand' => 'required|string|max:255',
-            'jumlah' => 'required|integer',
-            'keterangan' => 'required|string|max:255',
+            'tempat_lahir' => 'required',
+            'tanggal_lahir' => 'required',
+            'jenis_kelamin' => 'required',
+            'rw' => 'required',  
+            'rt' => 'required',  
+            'alamat' => 'required',  
+            'agama' => 'required',  
+            'pekerjaan' => 'required',  
         ]);
-        dd($request);
+
+        if($validator->fails()){
+            return redirect()->route("penduduk.index")->with('danger', $validator->errors()->first());
+        }
+        DB::beginTransaction();
+        try{
+            $cek = Penduduk::where('nik',$request->nik)->first();
+            if($cek){
+                DB::rollback();
+                $ea = "NIK Sudah dipakai";
+                return redirect()->route("penduduk.index")->with('danger', $ea);
+            }
+
+            $penduduk = new Penduduk();
+            $penduduk->nik = $request->nik;
+            $penduduk->nkk = $request->nkk;
+            $penduduk->nama = $request->nama;
+            $penduduk->tempat_lahir = $request->tempat_lahir;
+            $penduduk->tanggal_lahir = $request->tanggal_lahir;
+            $penduduk->jenis_kelamin = $request->jenis_kelamin;
+            $penduduk->jenis_kelamin = $request->jenis_kelamin;
+            $penduduk->rw = $request->rw;
+            $penduduk->rt = $request->rt;
+            $penduduk->alamat = $request->alamat;
+            $penduduk->agama = $request->agama;
+            $penduduk->pekerjaan = $request->pekerjaan;
+            $penduduk->created_by = Auth::user()->name;
+            $penduduk->save();
+            DB::commit();
+            return redirect()->route("penduduk.index")->with('status', "Sukses menambahkan penduduk");
+        }catch(\Exception $e){
+            DB::rollback();
+            $ea = "Terjadi Kesalahan saat menambahkan penduduk: ".$e->getMessage();
+            return redirect()->route("penduduk.index")->with('danger', $ea);
+        }
     }
 
     /**
@@ -53,17 +102,56 @@ class PendudukController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
+
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'nik' => 'required|string|max:255',
+            'nkk' => 'required|string|max:255',
+            'nama' => 'required|string|max:255',
+            'tempat_lahir' => 'required',
+            'tanggal_lahir' => 'required',
+            'jenis_kelamin' => 'required',
+            'rw' => 'required',  
+            'rt' => 'required',  
+            'alamat' => 'required',  
+            'agama' => 'required',  
+            'pekerjaan' => 'required',  
+        ]);
+        
+        if($validator->fails()){
+            return redirect()->route("penduduk.index")->with('danger', $validator->errors()->first());
+        }
+        DB::beginTransaction();
+        try{
+            $penduduk = Penduduk::findOrFail($id);
+            $penduduk->nik = $request->nik;
+            $penduduk->nkk = $request->nkk;
+            $penduduk->nama = $request->nama;
+            $penduduk->tempat_lahir = $request->tempat_lahir;
+            $penduduk->tanggal_lahir = $request->tanggal_lahir;
+            $penduduk->jenis_kelamin = $request->jenis_kelamin;
+            $penduduk->jenis_kelamin = $request->jenis_kelamin;
+            $penduduk->rw = $request->rw;
+            $penduduk->rt = $request->rt;
+            $penduduk->alamat = $request->alamat;
+            $penduduk->agama = $request->agama;
+            $penduduk->pekerjaan = $request->pekerjaan;
+            $penduduk->save();
+            DB::commit();
+            return redirect()->route("penduduk.index")->with('status', "Sukses mengedit penduduk");
+        }catch(\Exception $e){
+            DB::rollback();
+            $ea = "Terjadi Kesalahan saat mengedit penduduk: ".$e->getMessage();
+            return redirect()->route("penduduk.index")->with('danger', $ea);
+        }
     }
 
     /**
@@ -71,6 +159,10 @@ class PendudukController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        if(Penduduk::destroy($id)){
+            return redirect()->route("penduduk.index")->with('status', "Sukses menghapus penduduk");
+        }else {
+            return redirect()->route("penduduk.index")->with('danger', "Terjadi Kesalahan");
+        }
     }
 }

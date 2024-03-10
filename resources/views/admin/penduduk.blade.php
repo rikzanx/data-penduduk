@@ -47,18 +47,22 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>3578113105010002</td>
-                  <td>3578113105023422</td>
-                  <td>MUHAMMAD RIKZAN</td>
-                  <td>LAKI-LAKI</td>
-                  <td>002</td>
-                  <td>004</td>
-                  <td>
-                    <a href="#" class="btn btn-secondary">Detail</a>
-                  </td>
-                </tr>
+                  @foreach($penduduks as $index=>$item)
+                  <tr>
+                    <td>{{ $index+1 }}</td>
+                    <td>{{ $item->nik }}</td>
+                    <td>{{ $item->nkk }}</td>
+                    <td>{{ $item->nama }}</td>
+                    <td>{{ $item->jenis_kelamin }}</td>
+                    <td>{{ $item->rw }}</td>
+                    <td>{{ $item->rt }}</td>
+                    <td>
+                      <a href="#" class="btn btn-secondary" data-toggle="modal" data-target="#modal-detail{{ $item->id }}"><span class="fas fa-eye"></span></a>
+                      <a href="#" class="btn btn-warning" data-toggle="modal" data-target="#modal-edit{{ $item->id }}"><span class="fas fa-edit"></span></a>
+                      <button class="btn btn-danger" onclick="modaldelete({{ $item->id }})"><span class="fas fa-trash"></span></button>
+                    </td>
+                  </tr>
+                  @endforeach
                 </tbody>
                 <tfoot>
                   <tr>
@@ -88,7 +92,7 @@
 </div>
 <!-- /.content-wrapper -->
 
-<!-- Modal -->
+<!-- Modal Create -->
 <div class="modal fade" id="modal-create" aria-modal="true" role="dialog">
   <div class="modal-dialog">
     <form action="{{ route('penduduk.store') }}" method="post">
@@ -143,13 +147,21 @@
           <div class="form-group row">
             <label for="rw" class="col-sm-2 col-form-label">RW</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" id="rw" name="rw" placeholder="RW">
+              <select class="custom-select rounded-0" name="rw" id="rw">
+                @foreach($rws as $rw)
+                  <option value="{{ $rw->name }}">{{ $rw->name }}</option>
+                @endforeach
+              </select>
             </div>
           </div>
           <div class="form-group row">
             <label for="rt" class="col-sm-2 col-form-label">RT</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" id="rt" name="rt" placeholder="RT">
+            <select class="custom-select rounded-0" name="rt" id="rt">
+                @foreach($rts as $rt)
+                  <option value="{{ $rt->name }}">{{ $rt->name }}</option>
+                @endforeach
+              </select>
             </div>
           </div>
           <div class="form-group row">
@@ -185,7 +197,277 @@
     </form>
   </div>
 </div>
-  <!-- /.modal -->
+  <!-- /.modal create -->
+
+@foreach($penduduks as $item)
+  <!-- Modal edit -->
+  <div class="modal fade" id="modal-edit{{ $item->id }}" aria-modal="true" role="dialog">
+    <div class="modal-dialog">
+      <form action="{{ route('penduduk.update',$item->id) }}" method="post">
+        @csrf
+        {{ method_field('PATCH') }}
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Edit Data Penduduk</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group row">
+              <label for="nik" class="col-sm-2 col-form-label">NIK</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="nik" name="nik" placeholder="NIK" value="{{ $item->nik }}">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="nkk" class="col-sm-2 col-form-label">NO KK</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="nkk" name="nkk" placeholder="NO KK" value="{{ $item->nkk }}">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="nama" class="col-sm-2 col-form-label">NAMA</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="nama" name="nama" placeholder="NAMA" value="{{ $item->nama }}">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="tempat_lahir" class="col-sm-2 col-form-label">TEMPAT LAHIR</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir" placeholder="TEMPAT LAHIR" value="{{ $item->tempat_lahir }}">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="tanggal_lahir" class="col-sm-2 col-form-label">TANGGAL LAHIR</label>
+              <div class="col-sm-10">
+                <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" placeholder="TANGGAL LAHIR" value="{{ $item->tanggal_lahir }}">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="jenis_kelamin" class="col-sm-2 col-form-label">JENIS KELAMIN</label>
+              <div class="col-sm-10">
+                <select class="custom-select rounded-0" id="jenis_kelamin" name="jenis_kelamin">
+                  <option value="L" {{ ($item->jenis_kelamin == 'L')? 'selected':'' }}>LAKI-LAKI</option>
+                  <option value="P" {{ ($item->jenis_kelamin == 'P')? 'selected':'' }}>PEREMPUAN</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="rw" class="col-sm-2 col-form-label">RW</label>
+              <div class="col-sm-10">
+                <select class="custom-select rounded-0" name="rw" id="rw">
+                  @foreach($rws as $rw)
+                    <option value="{{ $rw->name }}" {{ ($rw->name == $item->rw)?'selected':'' }}>{{ $rw->name }}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="rt" class="col-sm-2 col-form-label">RT</label>
+              <div class="col-sm-10">
+              <select class="custom-select rounded-0" name="rt" id="rt">
+                  @foreach($rts as $rt)
+                    <option value="{{ $rt->name }}" {{ ($rt->name == $item->rw)?'selected':'' }}>{{ $rt->name }}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="alamat" class="col-sm-2 col-form-label">ALAMAT</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="alamat" name="alamat" placeholder="ALAMAT" value="{{ $item->alamat }}">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="agama" class="col-sm-2 col-form-label">AGAMA</label>
+              <div class="col-sm-10">
+                <select class="custom-select rounded-0" id="agama" name="agama">
+                  <option value="ISLAM" {{ ("ISLAM" == $item->agama)?'selected':'' }}>ISLAM</option>
+                  <option value="KRISTEN" {{ ("KRISTEN" == $item->agama)?'selected':'' }}>KRISTEN</option>
+                  <option value="KATOLIK" {{ ("KATOLIK" == $item->agama)?'selected':'' }}>KATOLIK</option>
+                  <option value="HINDU" {{ ("HINDU" == $item->agama)?'selected':'' }}>HINDU</option>
+                  <option value="BUDDHA" {{ ("BUDDHA" == $item->agama)?'selected':'' }}>BUDDHA</option>
+                  <option value="KHONGHUCU" {{ ("KHONGHUCU" == $item->agama)?'selected':'' }}>KHONGHUCU</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="pekerjaan" class="col-sm-2 col-form-label">pekerjaan</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="pekerjaan" name="pekerjaan" placeholder="pekerjaan" value="{{ $item->pekerjaan }}">
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer justify-content-between">
+            <button type="submit" class="btn btn-warning">Edit</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+    <!-- /.modal edit -->
+
+  <!-- Modal detail -->
+  <div class="modal fade" id="modal-detail{{ $item->id }}" aria-modal="true" role="dialog">
+    <div class="modal-dialog">
+      <form action="{{ route('penduduk.update',$item->id) }}" method="post">
+        @csrf
+        {{ method_field('PATCH') }}
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Detail Data Penduduk</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-12">
+                <h5>Keluarga Penduduk</h5>
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>NIK</th>
+                      <th>NKK</th>
+                      <th>NAMA</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @foreach($item->anggotas as $keluarga)
+                      <tr>
+                        <td>{{ $keluarga->nik }}</td>
+                        <td>{{ $keluarga->nkk }}</td>
+                        <td>{{ $keluarga->nama }}</td>
+                      </tr>
+                    @endforeach
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+            <div class="form-group row">
+              <label for="nik" class="col-sm-2 col-form-label">NIK</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="nik" name="nik" placeholder="NIK" value="{{ $item->nik }}" readonly>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="nkk" class="col-sm-2 col-form-label">NO KK</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="nkk" name="nkk" placeholder="NO KK" value="{{ $item->nkk }}" readonly>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="nama" class="col-sm-2 col-form-label">NAMA</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="nama" name="nama" placeholder="NAMA" value="{{ $item->nama }}" readonly>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="tempat_lahir" class="col-sm-2 col-form-label">TEMPAT LAHIR</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir" placeholder="TEMPAT LAHIR" value="{{ $item->tempat_lahir }}" readonly>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="tanggal_lahir" class="col-sm-2 col-form-label">TANGGAL LAHIR</label>
+              <div class="col-sm-10">
+                <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" placeholder="TANGGAL LAHIR" value="{{ $item->tanggal_lahir }}" readonly>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="jenis_kelamin" class="col-sm-2 col-form-label">JENIS KELAMIN</label>
+              <div class="col-sm-10">
+                <select class="custom-select rounded-0" id="jenis_kelamin" name="jenis_kelamin" disabled>
+                  <option value="L" {{ ($item->jenis_kelamin == 'L')? 'selected':'' }}>LAKI-LAKI</option>
+                  <option value="P" {{ ($item->jenis_kelamin == 'P')? 'selected':'' }}>PEREMPUAN</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="rw" class="col-sm-2 col-form-label">RW</label>
+              <div class="col-sm-10">
+                <select class="custom-select rounded-0" name="rw" id="rw" disabled>
+                  @foreach($rws as $rw)
+                    <option value="{{ $rw->name }}" {{ ($rw->name == $item->rw)?'selected':'' }}>{{ $rw->name }}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="rt" class="col-sm-2 col-form-label">RT</label>
+              <div class="col-sm-10">
+              <select class="custom-select rounded-0" name="rt" id="rt" disabled>
+                  @foreach($rts as $rt)
+                    <option value="{{ $rt->name }}" {{ ($rt->name == $item->rw)?'selected':'' }}>{{ $rt->name }}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="alamat" class="col-sm-2 col-form-label">ALAMAT</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="alamat" name="alamat" placeholder="ALAMAT" value="{{ $item->alamat }}" readonly>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="agama" class="col-sm-2 col-form-label">AGAMA</label>
+              <div class="col-sm-10">
+                <select class="custom-select rounded-0" id="agama" name="agama" disabled>
+                  <option value="ISLAM" {{ ("ISLAM" == $item->agama)?'selected':'' }}>ISLAM</option>
+                  <option value="KRISTEN" {{ ("KRISTEN" == $item->agama)?'selected':'' }}>KRISTEN</option>
+                  <option value="KATOLIK" {{ ("KATOLIK" == $item->agama)?'selected':'' }}>KATOLIK</option>
+                  <option value="HINDU" {{ ("HINDU" == $item->agama)?'selected':'' }}>HINDU</option>
+                  <option value="BUDDHA" {{ ("BUDDHA" == $item->agama)?'selected':'' }}>BUDDHA</option>
+                  <option value="KHONGHUCU" {{ ("KHONGHUCU" == $item->agama)?'selected':'' }}>KHONGHUCU</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="pekerjaan" class="col-sm-2 col-form-label">pekerjaan</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="pekerjaan" name="pekerjaan" placeholder="pekerjaan" value="{{ $item->pekerjaan }}" readonly>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer justify-content-between">
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+    <!-- /.modal detail -->
+@endforeach
+
+<!-- Modal delete -->
+<div class="modal fade" id="modal-default">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Peringatan</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Apakah anda yakin akan menghapus data ini&hellip;</p>
+          </div>
+          <form action="{{ route('penduduk.destroy', ':id') }}" method="POST" class="delete-form">
+              @csrf
+              @method('DELETE')
+              <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-danger">Delete</button>
+              </div>
+          </form>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal delete -->
+
 @endsection
 
 @section('js')
@@ -204,6 +486,12 @@
 <script src="{{ asset('plugins/datatables/dataTables.fixedHeader.min.js') }}"></script>
 <!-- Page specific script -->
 <script>
+  function modaldelete(id){
+        // alert(id);
+        var url = $('.delete-form').attr('action');
+        $('.delete-form').attr('action',url.replace(':id',id));
+        $('#modal-default').modal('show');
+    }
   $(function () {
     // $("#example1").DataTable({
     //   "responsive": true, "lengthChange": false, "autoWidth": false,
