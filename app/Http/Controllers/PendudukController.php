@@ -31,7 +31,7 @@ class PendudukController extends Controller
                 if(!$cek && str_contains($currentUrl, 'localhost')){
                     $dataPenduduk = Penduduk::all();
                     $client = new Client();
-                    $response = $client->post('http://localhost/data-penduduk/api/backup', [
+                    $response = $client->post('https://desaku.shw.my.id/api/backup', [
                         'json' => $dataPenduduk
                     ]);
                     $statusCode = $response->getStatusCode();
