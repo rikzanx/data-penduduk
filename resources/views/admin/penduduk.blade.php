@@ -484,6 +484,8 @@
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables/dataTables.fixedHeader.min.js') }}"></script>
+<!-- AdminLTE App -->
+<script src="{{ asset('dist/js/adminlte.min.js') }}"></script>
 <!-- Page specific script -->
 <script>
   function modaldelete(id){
@@ -516,11 +518,10 @@
   
       var table = $('#example1').DataTable({
           orderCellsTop: true,
-          fixedHeader: true,
+          fixedHeader: false,
           "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
           initComplete: function () {
               var api = this.api();
-
               // For each column
               api
                   .columns()

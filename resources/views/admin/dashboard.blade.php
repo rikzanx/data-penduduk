@@ -127,6 +127,8 @@
 @endsection
 
 @section('js')
+<!-- AdminLTE App -->
+<script src="{{ asset('dist/js/adminlte.min.js') }}"></script>
 <!-- ChartJS -->
 <script src="{{ asset('plugins/chart.js/Chart.min.js') }}"></script>
 <script>
