@@ -80,6 +80,7 @@ class PendudukController extends Controller
                     $penduduk->alamat = Str::upper($item['alamat']);
                     $penduduk->agama = $item['agama'];
                     $penduduk->pekerjaan = Str::upper($item['pekerjaan']);
+                    $penduduk->created_by = $item['created_by'];
                     $penduduk->save();
                 }
                 DB::commit();
