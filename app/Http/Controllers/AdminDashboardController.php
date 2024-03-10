@@ -45,12 +45,15 @@ class AdminDashboardController extends Controller
             ]
         ];
 
+        $penduduk = Penduduk::get();
 
-        $jenis_kelamin = array('P','L');
+        $jenis_kelamin = array('L','P');
         $label = ['Laki-Laki','Perempuan'];
         $value = [];
         foreach($jenis_kelamin as $item){
-            $query = Penduduk::select('jenis_kelamin')->groupBy('jenis_kelamin')->where('jenis_kelamin',$item)->get();
+            $query = $penduduk->filter(function($penduduk) use($item){
+                return $penduduk->jenis_kelamin == $item;
+            });
             $value[] = count($query);
         }
         $jumlah_label = count($label);
@@ -75,7 +78,6 @@ class AdminDashboardController extends Controller
         );
         $label = ['Bayi Dan Balita (0-4 thn)','Anak-anak (5-12 thn)','Remaja (13-19 thn)','Dewasa Muda (20-39 thn)','Dewasa Pertengahan (40-59 thn)','Lansia (60-79 thn)','Lansia Lanjut (80+ thn)'];
         $value = [];
-        $penduduk = Penduduk::get();
         foreach($variasi as $v){
             $query = $penduduk->filter(function($penduduk) use($v){
                 return $penduduk->usia >= $v['min'] && $penduduk->usia <= $v['max'];
