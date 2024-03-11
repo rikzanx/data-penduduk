@@ -19,6 +19,9 @@
     thead input {
         width: 100%;
     }
+    .modal-body {
+        /* max-height: 80vh !important; overflow-y: auto !important; */
+    }
   </style>
   @yield('css')
 </head>
@@ -88,6 +91,14 @@
             </a>
           </li>
           <li class="nav-item">
+            <a href="{{ route('kepalakeluarga.index') }}" class="nav-link {{ ('Data Kepala Keluarga' == $page )?'active':'' }}">
+              <i class="nav-icon fas fa-database"></i>
+              <p>
+                Data Kepala Keluarga
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
             <a href="{{ route('user.index') }}" class="nav-link {{ ('Data User' == $page )?'active':'' }}">
               <i class="nav-icon fas fa-user"></i>
               <p>
@@ -116,7 +127,7 @@
     <div class="float-right d-none d-sm-block">
       <b>Version</b> 3.2.0
     </div>
-    <strong>Copyright &copy; 2024 <a href="https://instagram.com/rikzanx">Muhammad Rikzan</a>.</strong> All rights reserved.
+    <strong>Copyright &copy; 2024 <a href="https://instagram.com/rikzanx">Developer</a>.</strong> All rights reserved.
   </footer>
 
   <!-- Control Sidebar -->

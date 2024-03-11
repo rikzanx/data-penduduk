@@ -15,7 +15,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use App\Models\Backup;
 
-class PendudukController extends Controller
+class KepalaKeluargaController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -46,8 +46,8 @@ class PendudukController extends Controller
         }
         $rws = Rw::get();
         $rts = Rt::get();
-        $penduduks = Penduduk::with('anggotas')->get();
-        return view('admin.penduduk',[
+        $penduduks = Penduduk::with('anggotas')->where('status_hubungan','KEPALA KELUARGA')->get();
+        return view('admin.kepalakeluarga',[
             'rws' => $rws,
             'rts' => $rts,
             'penduduks' => $penduduks
@@ -142,11 +142,10 @@ class PendudukController extends Controller
             'alamat' => 'required',  
             'agama' => 'required',  
             'pekerjaan' => 'required',  
-            'status_hubungan' => 'required',  
         ]);
 
         if($validator->fails()){
-            return redirect()->route("penduduk.index")->with('danger', $validator->errors()->first());
+            return redirect()->route("kepalakeluarga.index")->with('danger', $validator->errors()->first());
         }
         DB::beginTransaction();
         try{
@@ -154,7 +153,7 @@ class PendudukController extends Controller
             if($cek){
                 DB::rollback();
                 $ea = "NIK Sudah dipakai";
-                return redirect()->route("penduduk.index")->with('danger', $ea);
+                return redirect()->route("kepalakeluarga.index")->with('danger', $ea);
             }
 
             $penduduk = new Penduduk();
@@ -169,16 +168,71 @@ class PendudukController extends Controller
             $penduduk->alamat = Str::upper($request->alamat);
             $penduduk->agama = $request->agama;
             $penduduk->pekerjaan = Str::upper($request->pekerjaan);
-            $penduduk->status_hubungan = Str::upper($request->status_hubungan);
             $penduduk->keterangan = Str::upper($request->keterangan);
             $penduduk->created_by = Auth::user()->name;
             $penduduk->save();
             DB::commit();
-            return redirect()->route("penduduk.index")->with('status', "Sukses menambahkan penduduk");
+            return redirect()->route("kepalakeluarga.index")->with('status', "Sukses menambahkan penduduk");
         }catch(\Exception $e){
             DB::rollback();
             $ea = "Terjadi Kesalahan saat menambahkan penduduk: ".$e->getMessage();
-            return redirect()->route("penduduk.index")->with('danger', $ea);
+            return redirect()->route("kepalakeluarga.index")->with('danger', $ea);
+        }
+    }
+
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store_anggota(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'nik' => 'required|string|max:255',
+            'nkk' => 'required|string|max:255',
+            'nama' => 'required|string|max:255',
+            'tempat_lahir' => 'required',
+            'tanggal_lahir' => 'required',
+            'jenis_kelamin' => 'required',
+            'rw' => 'required',  
+            'rt' => 'required',  
+            'alamat' => 'required',  
+            'agama' => 'required',  
+            'pekerjaan' => 'required',  
+        ]);
+
+        if($validator->fails()){
+            return redirect()->route("kepalakeluarga.index")->with('danger', $validator->errors()->first());
+        }
+        DB::beginTransaction();
+        try{
+            $cek = Penduduk::where('nik',$request->nik)->first();
+            if($cek){
+                DB::rollback();
+                $ea = "NIK Sudah dipakai";
+                return redirect()->route("kepalakeluarga.index")->with('danger', $ea);
+            }
+
+            $penduduk = new Penduduk();
+            $penduduk->nik = $request->nik;
+            $penduduk->nkk = $request->nkk;
+            $penduduk->nama = Str::upper($request->nama);
+            $penduduk->tempat_lahir = Str::upper($request->tempat_lahir);
+            $penduduk->tanggal_lahir = $request->tanggal_lahir;
+            $penduduk->jenis_kelamin = $request->jenis_kelamin;
+            $penduduk->rw = $request->rw;
+            $penduduk->rt = $request->rt;
+            $penduduk->alamat = Str::upper($request->alamat);
+            $penduduk->agama = $request->agama;
+            $penduduk->pekerjaan = Str::upper($request->pekerjaan);
+            $penduduk->keterangan = Str::upper($request->keterangan);
+            $penduduk->created_by = Auth::user()->name;
+            $penduduk->save();
+            DB::commit();
+            return redirect()->route("kepalakeluarga.index")->with('status', "Sukses menambahkan penduduk");
+        }catch(\Exception $e){
+            DB::rollback();
+            $ea = "Terjadi Kesalahan saat menambahkan penduduk: ".$e->getMessage();
+            return redirect()->route("kepalakeluarga.index")->with('danger', $ea);
         }
     }
 
@@ -187,7 +241,16 @@ class PendudukController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $kepalakeluarga = Penduduk::findOrFail($id);
+        $rws = Rw::get();
+        $rts = Rt::get();
+        $penduduks = Penduduk::with('anggotas')->where('nkk',$kepalakeluarga->nkk)->get();
+        return view('admin.kepalakeluarga-detail',[
+            'rws' => $rws,
+            'rts' => $rts,
+            'penduduks' => $penduduks,
+            'kepalakeluarga' => $kepalakeluarga
+        ]);
     }
 
     /**
@@ -218,7 +281,7 @@ class PendudukController extends Controller
         ]);
         
         if($validator->fails()){
-            return redirect()->route("penduduk.index")->with('danger', $validator->errors()->first());
+            return redirect()->route("kepalakeluarga.index")->with('danger', $validator->errors()->first());
         }
         DB::beginTransaction();
         try{
@@ -234,15 +297,14 @@ class PendudukController extends Controller
             $penduduk->alamat = Str::upper($request->alamat);
             $penduduk->agama = $request->agama;
             $penduduk->pekerjaan = Str::upper($request->pekerjaan);
-            $penduduk->status_hubungan = Str::upper($request->status_hubungan);
             $penduduk->keterangan = Str::upper($request->keterangan);
             $penduduk->save();
             DB::commit();
-            return redirect()->route("penduduk.index")->with('status', "Sukses mengedit penduduk");
+            return redirect()->route("kepalakeluarga.index")->with('status', "Sukses mengedit penduduk");
         }catch(\Exception $e){
             DB::rollback();
             $ea = "Terjadi Kesalahan saat mengedit penduduk: ".$e->getMessage();
-            return redirect()->route("penduduk.index")->with('danger', $ea);
+            return redirect()->route("kepalakeluarga.index")->with('danger', $ea);
         }
     }
 
@@ -252,9 +314,9 @@ class PendudukController extends Controller
     public function destroy(string $id)
     {
         if(Penduduk::destroy($id)){
-            return redirect()->route("penduduk.index")->with('status', "Sukses menghapus penduduk");
+            return redirect()->route("kepalakeluarga.index")->with('status', "Sukses menghapus penduduk");
         }else {
-            return redirect()->route("penduduk.index")->with('danger', "Terjadi Kesalahan");
+            return redirect()->route("kepalakeluarga.index")->with('danger', "Terjadi Kesalahan");
         }
     }
 }

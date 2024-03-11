@@ -1,4 +1,4 @@
-@extends('admin.layouts.app',['page' => 'Data Master Penduduk'])
+@extends('admin.layouts.app',['page' => 'Data Kepala Keluarga'])
 
 @section('content')
 <!-- Content Wrapper. Contains page content -->
@@ -13,7 +13,8 @@
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item active">Master Data Penduduk</li>
+            <li class="breadcrumb-item">Master Kepala Keluarga</li>
+            <li class="breadcrumb-item active">Anggota</li>
           </ol>
         </div>
       </div>
@@ -27,12 +28,16 @@
         <div class="col-12">
           <div class="card">
             <div class="card-header">
-              <h3 class="card-title">Master Data Penduduk</h3>
+              <h3 class="card-title">Master Data Penduduk</h3><br>
+              <h6>Data Kartu Keluarga : {{ $kepalakeluarga->nik }}</h6>
+              <h6>Kepala Keluarga : {{ $kepalakeluarga->nama }}</h6>
               <br>
-              <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#modal-create">Tambah Data</a>
+              <a href="{{ route('kepalakeluarga.index') }}" class="btn btn-secondary" >Kembali</a>
+              <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#modal-create">Tambah Anggota Keluarga</a>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
+              
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr>
@@ -63,7 +68,9 @@
                     <td>
                       <a href="#" class="btn btn-secondary" data-toggle="modal" data-target="#modal-detail{{ $item->id }}"><span class="fas fa-eye"></span></a>
                       <a href="#" class="btn btn-warning" data-toggle="modal" data-target="#modal-edit{{ $item->id }}"><span class="fas fa-edit"></span></a>
+                      @if($item->nik != $kepalakeluarga->nik)
                       <button class="btn btn-danger" onclick="modaldelete({{ $item->id }})"><span class="fas fa-trash"></span></button>
+                      @endif
                     </td>
                   </tr>
                   @endforeach
@@ -87,11 +94,11 @@
 <!-- Modal Create -->
 <div class="modal fade" id="modal-create" aria-modal="true" role="dialog">
   <div class="modal-dialog modal-lg">
-    <form action="{{ route('penduduk.store') }}" method="post">
+    <form action="{{ route('kepalakeluarga.store-anggota') }}" method="post">
       @csrf
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title">Tambah Data Penduduk</h4>
+          <h4 class="modal-title">Tambah Data Anggota Keluarga</h4>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">×</span>
           </button>
@@ -100,7 +107,7 @@
         <div class="form-group row">
             <label for="nkk" class="col-sm-2 col-form-label">NO KK</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" id="nkk" name="nkk" placeholder="NO KK">
+              <input type="text" class="form-control" id="nkk" name="nkk" placeholder="NO KK" value="{{ $kepalakeluarga->nkk }}" readonly>
             </div>
           </div>
           <div class="form-group row">
@@ -187,7 +194,6 @@
             <label for="status_hubungan" class="col-sm-2 col-form-label">STATUS HUBUNGAN</label>
             <div class="col-sm-10">
               <select class="custom-select rounded-0" id="status_hubungan" name="status_hubungan">
-                <option value="KEPALA KELUARGA">KEPALA KELUARGA</option>
                 <option value="ISTRI">ISTRI</option>
                 <option value="ANAK">ANAK</option>
                 <option value="CUCU">CUCU</option>
@@ -220,7 +226,7 @@
   <!-- Modal edit -->
   <div class="modal fade" id="modal-edit{{ $item->id }}" aria-modal="true" role="dialog">
     <div class="modal-dialog modal-lg">
-      <form action="{{ route('penduduk.update',$item->id) }}" method="post">
+      <form action="{{ route('kepalakeluarga.update',$item->id) }}" method="post">
         @csrf
         {{ method_field('PATCH') }}
         <div class="modal-content">
@@ -352,7 +358,7 @@
   <!-- Modal detail -->
   <div class="modal fade" id="modal-detail{{ $item->id }}" aria-modal="true" role="dialog">
     <div class="modal-dialog modal-lg">
-      <form action="{{ route('penduduk.update',$item->id) }}" method="post">
+      <form action="{{ route('kepalakeluarga.update',$item->id) }}" method="post">
         @csrf
         {{ method_field('PATCH') }}
         <div class="modal-content">
@@ -509,7 +515,138 @@
       </form>
     </div>
   </div>
-    <!-- /.modal detail -->
+  <!-- /.modal detail -->
+
+  <!-- Modal Create -->
+  <div class="modal fade" id="modal-create-anggota{{ $item->id }}" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <form action="{{ route('kepalakeluarga.store-anggota') }}" method="post">
+        @csrf
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Tambah Data Penduduk</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">
+          <div class="form-group row">
+              <label for="nkk" class="col-sm-2 col-form-label">NO KK</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="nkk" name="nkk" placeholder="NO KK" value="{{ $item->nkk }}" readonly>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="nik" class="col-sm-2 col-form-label">NIK</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="nik" name="nik" placeholder="NIK">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="nama" class="col-sm-2 col-form-label">NAMA</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="nama" name="nama" placeholder="NAMA">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="tempat_lahir" class="col-sm-2 col-form-label">TEMPAT LAHIR</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir" placeholder="TEMPAT LAHIR">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="tanggal_lahir" class="col-sm-2 col-form-label">TANGGAL LAHIR</label>
+              <div class="col-sm-10">
+                <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" placeholder="TANGGAL LAHIR">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="jenis_kelamin" class="col-sm-2 col-form-label">JENIS KELAMIN</label>
+              <div class="col-sm-10">
+                <select class="custom-select rounded-0" id="jenis_kelamin" name="jenis_kelamin">
+                  <option value="L">LAKI-LAKI</option>
+                  <option value="P">PEREMPUAN</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="rt" class="col-sm-2 col-form-label">RT</label>
+              <div class="col-sm-10">
+              <select class="custom-select rounded-0" name="rt" id="rt">
+                  @foreach($rts as $rt)
+                    <option value="{{ $rt->name }}">{{ $rt->name }}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="rw" class="col-sm-2 col-form-label">RW</label>
+              <div class="col-sm-10">
+                <select class="custom-select rounded-0" name="rw" id="rw">
+                  @foreach($rws as $rw)
+                    @if($rw->name==002)
+                      <option value="{{ $rw->name }}">{{ $rw->name }}</option>
+                    @endif
+                  @endforeach
+                </select>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="alamat" class="col-sm-2 col-form-label">ALAMAT</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="alamat" name="alamat" placeholder="ALAMAT">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="agama" class="col-sm-2 col-form-label">AGAMA</label>
+              <div class="col-sm-10">
+                <select class="custom-select rounded-0" id="agama" name="agama">
+                  <option value="ISLAM">ISLAM</option>
+                  <option value="KRISTEN">KRISTEN</option>
+                  <option value="KATOLIK">KATOLIK</option>
+                  <option value="HINDU">HINDU</option>
+                  <option value="BUDDHA">BUDDHA</option>
+                  <option value="KHONGHUCU">KHONGHUCU</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="pekerjaan" class="col-sm-2 col-form-label">pekerjaan</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="pekerjaan" name="pekerjaan" placeholder="pekerjaan">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="status_hubungan" class="col-sm-2 col-form-label">STATUS HUBUNGAN</label>
+              <div class="col-sm-10">
+                <select class="custom-select rounded-0" id="status_hubungan" name="status_hubungan">
+                  <option value="ISTRI">ISTRI</option>
+                  <option value="ANAK">ANAK</option>
+                  <option value="CUCU">CUCU</option>
+                  <option value="LAINNYA">LAINNYA</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group row">
+                <label for="keterangan" class="col-sm-2 col-form-label">KETERANGAN</label>
+                <div class="col-sm-10">
+                <select class="custom-select rounded-0" id="keterangan" name="keterangan">
+                  <option value="ADA">ADA</option>
+                  <option value="MENINGGAL">MENINGGAL</option>
+                  <option value="PINDAH">PINDAH</option>
+                  <option value="TIDAK DIKETAHUI">TIDAK DIKETAHUI</option>
+                </select>
+                </div>
+            </div>
+          </div>
+          <div class="modal-footer justify-content-between">
+            <button type="submit" class="btn btn-primary">Tambah</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- /.modal create -->
 @endforeach
 
 <!-- Modal delete -->
@@ -525,7 +662,7 @@
           <div class="modal-body">
             <p>Apakah anda yakin akan menghapus data ini&hellip;</p>
           </div>
-          <form action="{{ route('penduduk.destroy', ':id') }}" method="POST" class="delete-form">
+          <form action="{{ route('kepalakeluarga.destroy', ':id') }}" method="POST" class="delete-form">
               @csrf
               @method('DELETE')
               <div class="modal-footer justify-content-between">

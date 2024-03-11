@@ -31,6 +31,8 @@ class Penduduk extends Model
         'agama',
         'status_perkawinan',
         'pekerjaan',
+        'status_hubungan',
+        'keterangan', //meninggal,pindah,
         'created_by'
     ];
 
