@@ -27,3 +27,4 @@ Route::resource('penduduk',PendudukController::class);
 Route::resource('user',UserController::class);
 Route::resource('kepalakeluarga',KepalaKeluargaController::class);
 Route::post('kepalakeluarga-store-anggota',[KepalaKeluargaController::class,'store_anggota'])->name('kepalakeluarga.store-anggota');
+Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);
