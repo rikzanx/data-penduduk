@@ -275,7 +275,7 @@
               <div class="col-sm-10">
               <select class="custom-select rounded-0" name="rt" id="rt">
                   @foreach($rts as $rt)
-                    <option value="{{ $rt->name }}" {{ ($rt->name == $item->rw)?'selected':'' }}>{{ $rt->name }}</option>
+                    <option value="{{ $rt->name }}" {{ ($rt->name == $item->rt)?'selected':'' }}>{{ $rt->name }}</option>
                   @endforeach
                 </select>
               </div>
@@ -438,7 +438,7 @@
               <div class="col-sm-10">
               <select class="custom-select rounded-0" name="rt" id="rt" disabled>
                   @foreach($rts as $rt)
-                    <option value="{{ $rt->name }}" {{ ($rt->name == $item->rw)?'selected':'' }}>{{ $rt->name }}</option>
+                    <option value="{{ $rt->name }}" {{ ($rt->name == $item->rt)?'selected':'' }}>{{ $rt->name }}</option>
                   @endforeach
                 </select>
               </div>

@@ -94,7 +94,7 @@
 <!-- Modal Create -->
 <div class="modal fade" id="modal-create" aria-modal="true" role="dialog">
   <div class="modal-dialog modal-lg">
-    <form action="{{ route('kepalakeluarga.store-anggota') }}" method="post">
+    <form action="{{ route('kepalakeluarga.store-anggota',$kepalakeluarga->id) }}" method="post">
       @csrf
       <div class="modal-content">
         <div class="modal-header">
@@ -281,7 +281,7 @@
               <div class="col-sm-10">
               <select class="custom-select rounded-0" name="rt" id="rt">
                   @foreach($rts as $rt)
-                    <option value="{{ $rt->name }}" {{ ($rt->name == $item->rw)?'selected':'' }}>{{ $rt->name }}</option>
+                    <option value="{{ $rt->name }}" {{ ($rt->name == $item->rt)?'selected':'' }}>{{ $rt->name }}</option>
                   @endforeach
                 </select>
               </div>
@@ -444,7 +444,7 @@
               <div class="col-sm-10">
               <select class="custom-select rounded-0" name="rt" id="rt" disabled>
                   @foreach($rts as $rt)
-                    <option value="{{ $rt->name }}" {{ ($rt->name == $item->rw)?'selected':'' }}>{{ $rt->name }}</option>
+                    <option value="{{ $rt->name }}" {{ ($rt->name == $item->rt)?'selected':'' }}>{{ $rt->name }}</option>
                   @endforeach
                 </select>
               </div>
@@ -520,7 +520,7 @@
   <!-- Modal Create -->
   <div class="modal fade" id="modal-create-anggota{{ $item->id }}" aria-modal="true" role="dialog">
     <div class="modal-dialog modal-lg">
-      <form action="{{ route('kepalakeluarga.store-anggota') }}" method="post">
+      <form action="{{ route('kepalakeluarga.store-anggota',$kepalakeluarga->id) }}" method="post">
         @csrf
         <div class="modal-content">
           <div class="modal-header">

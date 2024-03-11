@@ -184,7 +184,7 @@ class KepalaKeluargaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store_anggota(Request $request)
+    public function store_anggota(Request $request,$id)
     {
         $validator = Validator::make($request->all(), [
             'nik' => 'required|string|max:255',
@@ -201,7 +201,7 @@ class KepalaKeluargaController extends Controller
         ]);
 
         if($validator->fails()){
-            return redirect()->route("kepalakeluarga.index")->with('danger', $validator->errors()->first());
+            return redirect()->route("kepalakeluarga.show",$id)->with('danger', $validator->errors()->first());
         }
         DB::beginTransaction();
         try{
@@ -209,7 +209,7 @@ class KepalaKeluargaController extends Controller
             if($cek){
                 DB::rollback();
                 $ea = "NIK Sudah dipakai";
-                return redirect()->route("kepalakeluarga.index")->with('danger', $ea);
+                return redirect()->route("kepalakeluarga.show",$id)->with('danger', $ea);
             }
 
             $penduduk = new Penduduk();
@@ -224,15 +224,16 @@ class KepalaKeluargaController extends Controller
             $penduduk->alamat = Str::upper($request->alamat);
             $penduduk->agama = $request->agama;
             $penduduk->pekerjaan = Str::upper($request->pekerjaan);
+            $penduduk->status_hubungan = Str::upper($request->status_hubungan);
             $penduduk->keterangan = Str::upper($request->keterangan);
             $penduduk->created_by = Auth::user()->name;
             $penduduk->save();
             DB::commit();
-            return redirect()->route("kepalakeluarga.index")->with('status', "Sukses menambahkan penduduk");
+            return redirect()->route("kepalakeluarga.show",$id)->with('status', "Sukses menambahkan penduduk");
         }catch(\Exception $e){
             DB::rollback();
             $ea = "Terjadi Kesalahan saat menambahkan penduduk: ".$e->getMessage();
-            return redirect()->route("kepalakeluarga.index")->with('danger', $ea);
+            return redirect()->route("kepalakeluarga.show",$id)->with('danger', $ea);
         }
     }
 
@@ -297,6 +298,7 @@ class KepalaKeluargaController extends Controller
             $penduduk->alamat = Str::upper($request->alamat);
             $penduduk->agama = $request->agama;
             $penduduk->pekerjaan = Str::upper($request->pekerjaan);
+            $penduduk->status_hubungan = Str::upper($request->status_hubungan);
             $penduduk->keterangan = Str::upper($request->keterangan);
             $penduduk->save();
             DB::commit();
