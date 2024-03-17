@@ -16,10 +16,15 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::get();
-        return view('admin.user',[
-            'users' => $users
-        ]);
+        $email = Auth::user()->email;
+        if($email == "admin@gmail.com"){
+            $users = User::get();
+            return view('admin.user',[
+                'users' => $users
+            ]);
+        }
+
+        return "Tidak diizinkan";
     }
 
     /**

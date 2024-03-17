@@ -142,6 +142,8 @@
 <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
 <!-- Bootstrap 4 -->
 <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+@yield('js')
 @if (session()->has('danger'))
     <script>
         $(document).Toasts('create', {
@@ -152,7 +154,6 @@
         })
     </script>
 @endif
-
 @if (session()->has('status'))
     <script>
         $(document).Toasts('create', {
@@ -163,7 +164,5 @@
         })
     </script>
 @endif
-
-@yield('js')
 </body>
 </html>

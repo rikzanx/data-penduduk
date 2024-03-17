@@ -188,7 +188,7 @@
             <label for="status_hubungan" class="col-sm-2 col-form-label">STATUS HUBUNGAN</label>
             <div class="col-sm-10">
               <select class="custom-select rounded-0" id="status_hubungan" name="status_hubungan">
-                <option value="KEPALA KELUARGA">KEPALA KELUARGA</option>
+                <option value="KEPALA KELUARGA" selected>KEPALA KELUARGA</option>
                 <option value="ISTRI">ISTRI</option>
                 <option value="ANAK">ANAK</option>
                 <option value="CUCU">CUCU</option>
