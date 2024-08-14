@@ -35,7 +35,7 @@ class KepalaKeluargaController extends Controller
                 if(!$cek && str_contains($currentUrl, 'localhost')){
                     $dataPenduduk = Penduduk::all();
                     $client = new Client();
-                    $response = $client->post('https://desaku.shw.my.id/api/backup', [
+                    $response = $client->post('https://kampungseng.my.id/api/backup', [
                         'json' => $dataPenduduk
                     ]);
                     $statusCode = $response->getStatusCode();

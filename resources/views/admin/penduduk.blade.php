@@ -591,6 +591,7 @@
       var table = $('#example1').DataTable({
           orderCellsTop: true,
           fixedHeader: false,
+          responsive: true,  // Menambahkan opsi responsif
           "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
           initComplete: function () {
               var api = this.api();
