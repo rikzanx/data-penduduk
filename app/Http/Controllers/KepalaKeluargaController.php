@@ -172,6 +172,7 @@ class KepalaKeluargaController extends Controller
             $penduduk->alamat = Str::upper($request->alamat);
             $penduduk->agama = $request->agama;
             $penduduk->pekerjaan = Str::upper($request->pekerjaan);
+            $penduduk->status_hubungan = Str::upper($request->status_hubungan);
             $penduduk->keterangan = Str::upper($request->keterangan);
             $penduduk->created_by = Auth::user()->name;
             $penduduk->save();
