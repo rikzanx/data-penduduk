@@ -21,7 +21,7 @@ class UserController extends Controller
     public function index()
     {
         $email = Auth::user()->email;
-        if($email == "admin@gmail.com"){
+        if($email == "admin@gmail.com" || $email == "muhammadrikzan31@gmail.com"){
             $users = User::get();
             return view('admin.user',[
                 'users' => $users
@@ -121,6 +121,11 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
+        $user = User::findOrFail($id);
+        if($user->email == "admin@gmail.com"){
+            return redirect()->route("user.index")->with('danger', "Terjadi Kesalahan");
+        }
+        
         if(User::count() > 1){
             if(User::destroy($id)){
                 return redirect()->route("user.index")->with('status', "Sukses menghapus user");
