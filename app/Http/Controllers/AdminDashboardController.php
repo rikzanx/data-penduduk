@@ -31,7 +31,7 @@ class AdminDashboardController extends Controller
         $value = [];
         foreach($rts as $rt){
             $label[] = 'RT '.$rt->name;
-            $query = Penduduk::select('rt')->groupBy('rt')->where('rt',$rt->name)->get();
+            $query = Penduduk::select('rt')->where('rt',$rt->name)->get();
             $value[] = count($query);
         }
         $jumlah_label = count($label);
