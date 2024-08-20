@@ -42,9 +42,9 @@
                 <thead>
                 <tr>
                   <th>No</th>
+                  <th>NAMA</th>
                   <th>NIK</th>
                   <th>KK</th>
-                  <th>NAMA</th>
                   <th>JK</th>
                   <th>TGL LAHIR</th>
                   <th>USIA</th>
@@ -57,9 +57,9 @@
                   @foreach($penduduks as $index=>$item)
                   <tr>
                     <td>{{ $index+1 }}</td>
+                    <td>{{ $item->nama }}</td>
                     <td>{{ $item->nik }}</td>
                     <td>{{ $item->nkk }}</td>
-                    <td>{{ $item->nama }}</td>
                     <td>{{ $item->jenis_kelamin }}</td>
                     <td>{{ $item->tanggal_lahir }}</td>
                     <td>{{ $item->usia }}</td>
@@ -168,14 +168,14 @@
           <div class="form-group row">
             <label for="alamat" class="col-sm-2 col-form-label">ALAMAT</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" id="alamat" name="alamat" placeholder="ALAMAT">
+              <input type="text" class="form-control" id="alamat" name="alamat" placeholder="ALAMAT" value="{{ $kepalakeluarga->alamat }}">
             </div>
           </div>
           <div class="form-group row">
             <label for="agama" class="col-sm-2 col-form-label">AGAMA</label>
             <div class="col-sm-10">
               <select class="custom-select rounded-0" id="agama" name="agama">
-                <option value="ISLAM">ISLAM</option>
+                <option value="ISLAM" selected="selected">ISLAM</option>
                 <option value="KRISTEN">KRISTEN</option>
                 <option value="KATOLIK">KATOLIK</option>
                 <option value="HINDU">HINDU</option>
@@ -197,6 +197,7 @@
                 <option value="ISTRI">ISTRI</option>
                 <option value="ANAK">ANAK</option>
                 <option value="CUCU">CUCU</option>
+                <option value="FAMILY LAIN">FAMILY LAIN</option>
                 <option value="LAINNYA">LAINNYA</option>
               </select>
             </div>
@@ -205,7 +206,7 @@
               <label for="keterangan" class="col-sm-2 col-form-label">KETERANGAN</label>
               <div class="col-sm-10">
               <select class="custom-select rounded-0" id="keterangan" name="keterangan">
-                <option value="ADA">ADA</option>
+                <option value="ADA" selected="selected">ADA</option>
                 <option value="MENINGGAL">MENINGGAL</option>
                 <option value="PINDAH">PINDAH</option>
                 <option value="TIDAK DIKETAHUI">TIDAK DIKETAHUI</option>
@@ -330,6 +331,7 @@
                   <option value="ISTRI" {{ ("ISTRI" == $item->status_hubungan)?'selected':'' }}>ISTRI</option>
                   <option value="ANAK" {{ ("ANAK" == $item->status_hubungan)?'selected':'' }}>ANAK</option>
                   <option value="CUCU" {{ ("CUCU" == $item->status_hubungan)?'selected':'' }}>CUCU</option>
+                  <option value="FAMILY LAIN" {{ ("FAMILY LAIN" == $item->status_hubungan)?'selected':'' }}>FAMILY LAIN</option>
                   <option value="LAINNYA" {{ ("LAINNYA" == $item->status_hubungan)?'selected':'' }}>LAINNYA</option>
                 </select>
               </div>
@@ -493,6 +495,7 @@
                   <option value="ISTRI" {{ ("ISTRI" == $item->status_hubungan)?'selected':'' }}>ISTRI</option>
                   <option value="ANAK" {{ ("ANAK" == $item->status_hubungan)?'selected':'' }}>ANAK</option>
                   <option value="CUCU" {{ ("CUCU" == $item->status_hubungan)?'selected':'' }}>CUCU</option>
+                  <option value="FAMILY LAIN" {{ ("FAMILY LAIN" == $item->status_hubungan)?'selected':'' }}>FAMILY LAIN</option>
                   <option value="LAINNYA" {{ ("LAINNYA" == $item->status_hubungan)?'selected':'' }}>LAINNYA</option>
                 </select>
               </div>
@@ -623,6 +626,7 @@
                   <option value="ISTRI">ISTRI</option>
                   <option value="ANAK">ANAK</option>
                   <option value="CUCU">CUCU</option>
+                  <option value="FAMILY LAIN">FAMILY LAIN</option>
                   <option value="LAINNYA">LAINNYA</option>
                 </select>
               </div>
